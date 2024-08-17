@@ -91,6 +91,35 @@ The Containment Napp supports TODO, TODO
  	# curl -s -X DELETE http://127.0.0.1:8181/api/hackinsdn/containment/v1/6ca46d899ff14f
 
 
+Examples of BLOCK rules
+========================
+
+- To create a containment to block traffic from VLAN 100 at the switch 00:00:00:00:00:00:00:01 port 1, one would have to run the following command:
+
+.. code-block:: shell
+
+	# curl -s -X POST -H 'Content-type: application/json' http://127.0.0.1:8181/api/hackinsdn/containment/v1/ -d '{"switch": "00:00:00:00:00:00:00:01", "interface": 1, "match": {"vlan": 100}}'
+
+- To create a containment to block traffic from IPv4 10.1.0.254 on VLAN 100 at the switch 00:00:00:00:00:00:00:01 port 1, one would have to run the following command:
+
+.. code-block:: shell
+
+	# curl -H 'Content-type: application/json' -X POST http://127.0.0.1:8181/api/hackinsdn/containment/v1/ -d '{"switch": "00:00:00:00:00:00:00:01", "interface": 1, "match": {"vlan": 100, "ipv4_dst": "10.1.0.254"}}'
+
+- To create a containment to block traffic from IPv4 10.1.0.254 on VLAN 100 and UDP protocol at the switch 00:00:00:00:00:00:00:01 port 1, one would have to run the following command:
+
+.. code-block:: shell
+
+	# curl -H 'Content-type: application/json' -X POST http://127.0.0.1:8181/api/hackinsdn/containment/v1/ -d '{"switch": "00:00:00:00:00:00:00:01", "interface": 1, "match": {"vlan": 100, "ipv4_dst": "10.1.0.254", "ip_proto":17}}'
+
+- To create a containment to block traffic from IPv6 2024:db1::003 on VLAN 101 at the switch 00:00:00:00:00:00:00:01 port 1, one would have to run the following command:
+
+.. code-block:: shell
+
+	# curl -H 'Content-type: application/json' -X POST http://127.0.0.1:8181/api/hackinsdn/containment/v1/ -d '{"switch": "00:00:00:00:00:00:00:01", "interface": 1, "match": {"vlan": 100, "ipv6_dst": "2024:db1::003"}}'
+
+Examples of REDIRECT rules
+========================
 
 .. TAGs
 
