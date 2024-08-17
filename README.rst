@@ -120,6 +120,17 @@ Examples of BLOCK rules
 
 Examples of REDIRECT rules
 ========================
+- To create a containment to redirect traffic from VLAN 100 to outport 2 at the switch 00:00:00:00:00:00:00:01 port 1, one would have to run the following command:
+
+.. code-block:: shell
+
+	# curl -H 'Content-type: application/json' -X POST http://127.0.0.1:8181/api/hackinsdn/containment/v1/ -d '{"switch": "00:00:00:00:00:00:00:01", "interface": 1, "match": {"vlan": 100}, “redirect_to”: {“outport”: 2}}'
+
+- To create a containment to redirect traffic from VLAN 100 to outport 2 at the switch 00:00:00:00:00:00:00:01 port 1, but before that, CHANGE package fields (set_vlan, set_ipv4_dst, set_ipv6_dst, set_tcp_dst, set_udp_dst or set_mac_dst), one would have to run the following command:
+
+.. code-block:: shell
+
+	# curl -H 'Content-type: application/json' -X POST http://127.0.0.1:8181/api/hackinsdn/containment/v1/ -d '{"switch": "00:00:00:00:00:00:00:01", "interface": 1, "match": {"vlan": 100}, "redirect_to": {"outport": 2}, “set”: {“set_ipv4_dst”: "10.1.0.10"}}'
 
 .. TAGs
 
