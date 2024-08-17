@@ -70,7 +70,7 @@ The Containment Napp supports TODO, TODO
 
 .. code-block:: shell
 
- 	# curl -s http://127.0.0.1:8181/api/hackinsdn/containment/v1/
+ 	# curl -s http://127.0.0.1:8181/api/hackinsdn/containment/v1/ or curl -X GET -H 'Content-type: application/json' http://127.0.0.1:8181/api/hackinsdn/containment/v1/
 	{
 	  "blocks": {
 	    "6ca46d899ff14f": {
