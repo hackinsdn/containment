@@ -116,7 +116,7 @@ Examples of BLOCK rules
 
 .. code-block:: shell
 
-	# curl -H 'Content-type: application/json' -X POST http://127.0.0.1:8181/api/hackinsdn/containment/v1/ -d '{"switch": "00:00:00:00:00:00:00:01", "interface": 1, "match": {"vlan": 100, "ipv6_dst": "2024:db1::003"}}'
+	# curl -H 'Content-type: application/json' -X POST http://127.0.0.1:8181/api/hackinsdn/containment/v1/ -d '{"switch": "00:00:00:00:00:00:00:01", "interface": 1, "match": {"vlan": 101, "ipv6_dst": "2024:db1::003"}}'
 
 Examples of REDIRECT rules
 ========================
