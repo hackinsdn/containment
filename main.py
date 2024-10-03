@@ -2,6 +2,7 @@
 
 import json
 import requests
+from textwrap import wrap
 from uuid import uuid4
 
 from kytos.core import KytosEvent, KytosNApp, log, rest
@@ -88,7 +89,10 @@ class Main(KytosNApp):
             # TODO: validate all user inputs
             mandatory_fields = ["switch", "interface", "match"]
             # check switch
-            switch_id = data.get("switch")
+            switch_id = data.get("switch", "")
+            if ":" not in switch_id:
+                switch_id = ":".join(wrap(switch_id, 2))
+                data["switch"] = switch_id
             if not switch_id or switch_id not in self.controller.switches:
                 return False, f"Invalid switch: {switch_id}"
             switch = self.controller.switches[switch_id]
@@ -442,6 +446,7 @@ class Main(KytosNApp):
             json=payload,
         )
         if response.status_code != 202:
+            log.info(f"Fail to add rule, flow_manager response: {response.text}")
             raise HTTPException(
                 400, f"Invalid request to flow_manager: {response.text}"
             )
@@ -473,6 +478,7 @@ class Main(KytosNApp):
                 json=payload,
             )
             if response.status_code != 202:
+                log.info(f"Fail to remove rule, flow_manager response: {response.text}")
                 raise HTTPException(
                     400, f"Invalid request to flow_manager: {response.text}"
                 )
@@ -493,6 +499,7 @@ class Main(KytosNApp):
         data = get_json_or_400(request, self.controller.loop)  # access user request
         result, msg = self.validate_input(data, type)
         if not result:
+            log.info(f"Invalid request data: {msg} - request={data}")
             raise HTTPException(400, f"Invalid request data: {msg}")
         log.info(f"ADD REDIRECT contention called with data={data}")
 
@@ -506,6 +513,7 @@ class Main(KytosNApp):
             block_id = data["block_id"]
 
         if block_id in self.stored_blocks["blocks"]:  # NAO PRECISA MAIS.
+            log.info("Fail to create containment: ID already exists.")
             raise HTTPException(400, "Fail to create containment: ID already exists.")
         else:
             # linha = str(data["switch"]) + str(data.get("interface")) + str(data.get("match")) + str(data.get("redirect_to"))
@@ -521,6 +529,7 @@ class Main(KytosNApp):
                     log.info(f"Update contention list ADD={data}")
                     return JSONResponse({"containment_id": block_id})
             else:
+                log.info("Fail to create containment: RULE already exists.")
                 raise HTTPException(400, "Fail to create containment: RULE already exists in the list.")
 
     @rest("/v1/{containment_id}", methods=["DELETE"])
