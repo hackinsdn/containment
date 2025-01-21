@@ -86,7 +86,7 @@ class Main(KytosNApp):
 
     def validate_input(self, data, type):
         if type == "POST":
-            # TODO: validate all user inputs
+            # Validate all user inputs
             mandatory_fields = ["switch", "interface", "match"]
             # check switch
             switch_id = data.get("switch", "")
@@ -392,9 +392,6 @@ class Main(KytosNApp):
             if "mac_dst" in data["match"]:
                 payload["flows"][0]["match"]["dl_dst"] = data["match"]["mac_dst"]
 
-            # Considerando uma ação de redirect modificando os campos do pacote, podemos ter solicitações de modificações do campo:
-            # "set_ipv4_dst", "set_ipv6_dst", "set_tcp_dst", "set_udp_dst", "set_eth_dst"
-
         if type == "DELETE":
             if "redirect_to" not in self.stored_blocks["blocks"][block_id]:  # It's a block contention.
                 payload = {
@@ -509,14 +506,13 @@ class Main(KytosNApp):
 
         if (
             "block_id" in data
-        ):  # Para verificação se tentar inserir um ID já existente (proximo if) #NAO PRECISA. OU PENSAR EM UPDATE (?)
+        ):  # Para verificação se tentar inserir um ID já existente (proximo if)
             block_id = data["block_id"]
 
-        if block_id in self.stored_blocks["blocks"]:  # NAO PRECISA MAIS.
+        if block_id in self.stored_blocks["blocks"]:
             log.info("Fail to create containment: ID already exists.")
             raise HTTPException(400, "Fail to create containment: ID already exists.")
         else:
-            # linha = str(data["switch"]) + str(data.get("interface")) + str(data.get("match")) + str(data.get("redirect_to"))
             linha = (
                 str(data["switch"])
                 + str(data.get("interface"))
@@ -555,23 +551,3 @@ class Main(KytosNApp):
     def list_contention(self, request: Request) -> JSONResponse:
         """List contentions performed so far."""
         return JSONResponse(self.stored_blocks)
-
-        # 1. descrever a API REST
-        # quais argumentos vamos aceitar?
-        # - em qual switch vamos bloquear (mandatory)
-        # - em qual porta do switch vamos bloquear (podemos bloquear em mais de uma porta? ou melhor que seja numa porta especifica e caso queria bloquear em mais de uma porta vc mandaria multiplas requisicoes?)
-        #   -> o IDS vai ter uma base de mapeamento sobre onde o ataque foi visto e onde ele sera bloqueado (ou isso ficaria no proprio Kytos) -- mandatory
-        # - quais os criterios de bloqueio (match fields) --  mandatory
-        #   - VLAN  -- mandatory
-        #   - IP de origem (v4 e v6) -- aceita mascara 192.168.0.0/24
-        #   - IP de destino (v4 e v6) -- aceita mascara
-        #   - Protocolo IP (tcp/UDP/ICMP/IGMP,etc)
-        #   - Porta de origem L4 (src_port udp, src_port tcp)
-        #   - Porta de destino L4 (dst_port udp, dst_port tcp)
-        # - duracao do bloqueio (por quanto tempo essa regra vai permanecer ativa?)
-        # - acao de bloquei (essa chamada já eh pra block, entao nao da acao)
-
-        # 2. Validacao dos dados de entrada
-
-        # 3. Criar a regra
-        # --> chamar a flow_manager
