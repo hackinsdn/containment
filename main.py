@@ -393,7 +393,9 @@ class Main(KytosNApp):
                 payload["flows"][0]["match"]["dl_dst"] = data["match"]["mac_dst"]
 
         if type == "DELETE":
-            if "redirect_to" not in self.stored_blocks["blocks"][block_id]:  # It's a block contention.
+            if (
+                "redirect_to" not in self.stored_blocks["blocks"][block_id]
+            ):  # It's a block contention.
                 payload = {
                     "flows": [
                         {
@@ -412,7 +414,9 @@ class Main(KytosNApp):
                         }
                     ]
                 }
-            if "redirect_to" in self.stored_blocks["blocks"][block_id]:  # It's a redirect contention.
+            if (
+                "redirect_to" in self.stored_blocks["blocks"][block_id]
+            ):  # It's a redirect contention.
                 redirect_to = self.stored_blocks["blocks"][block_id]["redirect_to"][
                     "outport"
                 ]
@@ -526,7 +530,9 @@ class Main(KytosNApp):
                     return JSONResponse({"containment_id": block_id})
             else:
                 log.info("Fail to create containment: RULE already exists.")
-                raise HTTPException(400, "Fail to create containment: RULE already exists in the list.")
+                raise HTTPException(
+                    400, "Fail to create containment: RULE already exists in the list."
+                )
 
     @rest("/v1/{containment_id}", methods=["DELETE"])
     def contention_remove(self, request: Request) -> JSONResponse:
