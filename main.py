@@ -141,12 +141,10 @@ class Main(KytosNApp):
                 or "udp_src" in match
                 or "udp_dst" in match
             ):
-                if (
-                    "ipv4_src" not in match
-                    or "ipv4_dst" not in match
-                    or "ipv6_src" not in match
-                    or "ipv6_dst" not in match
-                ):
+                if all([
+                    attr not in match for attr in
+                    ["ipv4_src", "ipv4_dst", "ipv6_src", "ipv6_dst"]
+                ]):
                     return False, f"Missing mandatory ipv4 or ipv6 on match"
 
             # Only Redirect Contention, the outport redirect is specification (mandatory).
