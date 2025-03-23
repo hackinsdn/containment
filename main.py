@@ -127,6 +127,7 @@ class Main(KytosNApp):
                 "tcp_dst",
                 "udp_src",
                 "udp_dst",
+                "icmp_type",
                 "mac_src",
                 "mac_dst",
             ]
@@ -140,6 +141,7 @@ class Main(KytosNApp):
                 or "tcp_dst" in match
                 or "udp_src" in match
                 or "udp_dst" in match
+                or "icmp_type" in match
             ):
                 if all([
                     attr not in match for attr in
@@ -385,6 +387,12 @@ class Main(KytosNApp):
             if "udp_dst" in data["match"]:
                 payload["flows"][0]["match"]["nw_proto"] = 17
                 payload["flows"][0]["match"]["udp_dst"] = data["match"]["udp_dst"]
+            if "icmp_type" in data["match"] and payload["flows"][0]["match"]["dl_type"] == 0x800:
+                payload["flows"][0]["match"]["nw_proto"] = 1
+                payload["flows"][0]["match"]["icmpv4_type"] = data["match"]["icmp_type"]
+            if "icmp_type" in data["match"] and payload["flows"][0]["match"]["dl_type"] == 0x86DD:
+                payload["flows"][0]["match"]["nw_proto"] = 58
+                payload["flows"][0]["match"]["icmpv6_type"] = data["match"]["icmp_type"]
             if "mac_src" in data["match"]:
                 payload["flows"][0]["match"]["dl_src"] = data["match"]["mac_src"]
             if "mac_dst" in data["match"]:
